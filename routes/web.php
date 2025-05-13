@@ -6,8 +6,20 @@ use Xendit\Configuration;
 use Xendit\Invoice\InvoiceApi;
 
 Route::get('/', function () {
-    return Inertia::render('welcome');
+    return Inertia::render('web/index');
 })->name('home');
+
+Route::get('/rent', function () {
+    return Inertia::render('web/page/rent/index');
+})->name('rent');
+
+Route::get('/about', function () {
+    return Inertia::render('web/page/about/index');
+})->name('about');
+
+Route::get('/contact', function () {
+    return Inertia::render('web/page/contact/index');
+})->name('contact');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
