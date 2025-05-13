@@ -4,9 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class review extends Model
+class Category extends Model
 {
-    protected $guarded = [
-
-    ];
+    protected $guarded = [];
 }
