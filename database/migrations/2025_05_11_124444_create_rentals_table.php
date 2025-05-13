@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('rentals', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user');
-            $table->foreign('user')->on('users')->references('id')->onDelete('cascade')->onUpdate('cascade');
-            $table->unsignedBigInteger('payment_method')->nullable();
-            $table->foreign('payment_method')->on('paymentmethods')->references('id')->onDelete('set null')->onUpdate('cascade');
-            $table->enum('status',['pending','confirm','ready_for_pickup','picked_up','canceled','refunded']);
-            $table->enum('payment_status',['paid','unpaid'])->default('unpaid');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->on('users')->references('id')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->unsignedBigInteger('payment_method_id')->nullable();
+            $table->foreign('payment_method_id')->on('payment_methods')->references('id')->nullOnDelete()->cascadeOnUpdate();
+            $table->enum('status', ['pending', 'confirm', 'ready_for_pickup', 'picked_up', 'canceled', 'refunded']);
+            $table->enum('payment_status', ['paid', 'unpaid'])->default('unpaid');
             $table->bigInteger('total');
             $table->date('start_date');
-            $table->date('end_date');            
+            $table->date('end_date');
             $table->timestamps();
         });
     }

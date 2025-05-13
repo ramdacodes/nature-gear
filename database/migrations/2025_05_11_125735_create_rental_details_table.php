@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rentaldetails', function (Blueprint $table) {
+        Schema::create('rental_details', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('rental_id');
+            $table->foreign('rental_id')->on('rentals')->references('id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->unsignedBigInteger('product_id')->nullable();
-            $table->foreign('product_id')->on('products')->references('id')->onDelete('set null')->onUpdate('cascade');
+            $table->foreign('product_id')->on('products')->references('id')->nullOnDelete()->cascadeOnUpdate();
             $table->bigInteger('price');
             $table->integer('duration');
             $table->bigInteger('sub_total');
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rentaldetails');
+        Schema::dropIfExists('rental_details');
     }
 };
