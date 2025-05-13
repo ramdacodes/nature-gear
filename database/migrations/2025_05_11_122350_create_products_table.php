@@ -14,21 +14,20 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('category')->nullable();
-            $table->foreign('category')->on('categories')->references('id')->onDelete('set null')->onUpdate('cascade');
-            $table->unsignedBigInteger('variant')->nullable();
-            $table->foreign('variant')->on('variants')->references('id')->onDelete('set null')->onUpdate('cascade');
-            $table->bigInteger('price_day');
-            $table->text('descryption');
-            $table->string('pic1');
-            $table->string('pic2');
-            $table->string('pic3');
-            $table->string('pic4');
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->foreign('category_id')->on('categories')->references('id')->nullOnDelete()->cascadeOnUpdate();
+            $table->unsignedBigInteger('variant_id')->nullable();
+            $table->foreign('variant_id')->on('variants')->references('id')->nullOnDelete()->cascadeOnUpdate();
+            $table->bigInteger('price_per_day');
+            $table->text('description');
+            $table->string('image_1');
+            $table->string('image_2')->nullable();
+            $table->string('image_3')->nullable();
+            $table->string('image_4')->nullable();
 
 
 
             $table->timestamps();
-            
         });
     }
 

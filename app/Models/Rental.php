@@ -4,9 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class rental extends Model
+class Rental extends Model
 {
-protected $guarded = [
-    
-    ];
+    protected $guarded = [];
 }

@@ -4,9 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class variant extends Model
+class PaymentMethod extends Model
 {
-    protected $guarded = [
-    
-    ];
+    protected $guarded = [];
 }

@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('paymentmethods', function (Blueprint $table) {
+        Schema::create('payment_methods', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('payment_method',['bank_transfer','cc','minimarket','ewalet','qris']);
+            $table->enum('type', ['bank_transfer', 'cc', 'minimarket', 'ewalet', 'qris']);
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('paymentmethods');
+        Schema::dropIfExists('payment_methods');
     }
 };
