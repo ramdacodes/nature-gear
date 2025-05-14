@@ -38,7 +38,7 @@ const routeList: RouteProps[] = [
 export const Navbar = () => {
     const [isOpen, setIsOpen] = React.useState(false);
     return (
-        <header className="bg-opacity-15 border-secondary bg-card sticky top-5 z-40 mx-auto flex w-[90%] items-center justify-between rounded-2xl border p-2 shadow-inner md:w-[70%] lg:w-[75%] lg:max-w-screen-xl">
+        <header className="bg-opacity-15 border-secondary bg-card sticky top-5 z-40 mx-auto flex w-[90%] items-center justify-between rounded-2xl border p-2 md:w-[70%] lg:w-[75%] lg:max-w-screen-xl">
             <Link href="/" className="flex items-center text-base font-bold">
                 <div className="mr-2">
                     <AppLogoIcon className="size-10" />
