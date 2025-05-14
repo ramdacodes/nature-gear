@@ -39,17 +39,17 @@ const navGroupItems: NavGroup[] = [
         items: [
             {
                 title: 'Produk',
-                href: '/products',
+                href: route('products.index'),
                 icon: Package,
             },
             {
                 title: 'Varian',
-                href: '/variants',
+                href: route('variants.index'),
                 icon: LayoutGrid,
             },
             {
                 title: 'Kategori',
-                href: '/categories',
+                href: route('categories.index'),
                 icon: Tags,
             },
         ],

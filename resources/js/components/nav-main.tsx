@@ -1,4 +1,5 @@
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { cn } from '@/lib/utils';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 
@@ -17,7 +18,14 @@ export function NavMain({ title, items = [] }: { title: string; items: NavItem[]
                             <SidebarMenuButton asChild isActive={isActive} tooltip={{ children: item.title }}>
                                 <Link href={item.href} prefetch>
                                     {item.icon && <item.icon />}
-                                    <span>{item.title}</span>
+                                    <span
+                                        className={cn(
+                                            isActive ? 'font-bold' : 'font-normal',
+                                            'text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100',
+                                        )}
+                                    >
+                                        {item.title}
+                                    </span>
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>

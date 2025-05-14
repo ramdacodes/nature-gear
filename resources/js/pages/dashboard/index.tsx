@@ -1,8 +1,8 @@
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
-import { Info } from 'lucide-react';
+import { CalendarClock, CreditCard, Package, Users } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -17,15 +17,53 @@ export default function Dashboard() {
             <Head title="Dashboard" />
 
             <div className="h-full p-4">
-                <Alert variant="default">
-                    <Info className="h-4 w-4" />
-                    <AlertTitle>Informasi</AlertTitle>
-                    <AlertDescription>Halaman ini masih dalam tahap pengembangan</AlertDescription>
-                </Alert>
+                <h2 className="text-2xl font-semibold">Dashboard</h2>
+                <p className="text-muted-foreground mt-2">Selamat datang di Nature Gear</p>
 
-                <div className="mt-4">
-                    <h2 className="text-2xl font-semibold">Dashboard</h2>
-                    <p className="text-muted-foreground mt-2">Selamat datang di halaman dashboard</p>
+                <div className="grid grid-cols-1 gap-4 py-5 sm:grid-cols-2 lg:grid-cols-4">
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-bold">Total Penyewaan</CardTitle>
+                            <CalendarClock className="text-muted-foreground h-4 w-4" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">128</div>
+                            <p className="text-muted-foreground text-xs">+12% dari minggu lalu</p>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-bold">Produk Tersedia</CardTitle>
+                            <Package className="text-muted-foreground h-4 w-4" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">342</div>
+                            <p className="text-muted-foreground text-xs">Tersedia untuk disewa</p>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-bold">Pelanggan</CardTitle>
+                            <Users className="text-muted-foreground h-4 w-4" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">89</div>
+                            <p className="text-muted-foreground text-xs">+3 pelanggan baru hari ini</p>
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-bold">Pendapatan Bulan Ini</CardTitle>
+                            <CreditCard className="text-muted-foreground h-4 w-4" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">Rp 12.500.000</div>
+                            <p className="text-muted-foreground text-xs">+5% dari bulan lalu</p>
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
         </AppLayout>
