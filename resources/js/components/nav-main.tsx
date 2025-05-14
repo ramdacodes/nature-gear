@@ -3,6 +3,14 @@ import { cn } from '@/lib/utils';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 
+function getPathname(url: string): string {
+    try {
+        return new URL(url, window.location.origin).pathname.replace(/\/+$/, '');
+    } catch {
+        return url.replace(/\/+$/, '');
+    }
+}
+
 export function NavMain({ title, items = [] }: { title: string; items: NavItem[] }) {
     const page = usePage();
 
@@ -11,7 +19,13 @@ export function NavMain({ title, items = [] }: { title: string; items: NavItem[]
             <SidebarGroupLabel>{title}</SidebarGroupLabel>
             <SidebarMenu>
                 {items.map((item) => {
-                    const isActive = item.href.endsWith(page.url);
+                    const currentPath = getPathname(page.url);
+                    const itemPath = getPathname(item.href);
+
+                    const currentSegments = currentPath.split('/').filter(Boolean);
+                    const itemSegments = itemPath.split('/').filter(Boolean);
+
+                    const isActive = currentSegments.length === itemSegments.length && currentSegments.every((seg, idx) => seg === itemSegments[idx]);
 
                     return (
                         <SidebarMenuItem key={item.title}>

@@ -17,7 +17,7 @@ export default function Dashboard() {
             <Head title="Dashboard" />
 
             <div className="h-full p-4">
-                <h2 className="text-2xl font-semibold">Dashboard</h2>
+                <h2 className="text-xl font-semibold">Dashboard</h2>
                 <p className="text-muted-foreground mt-2">Selamat datang di Nature Gear</p>
 
                 <div className="grid grid-cols-1 gap-4 py-5 sm:grid-cols-2 lg:grid-cols-4">

@@ -11,6 +11,7 @@ Route::prefix('products')->group(function () {
         Route::post('/', 'store')->name('store');
         Route::put('/{id}', 'update')->name('update');
         Route::delete('/{id}', 'destroy')->name('destroy');
+        Route::delete('/destroy/multiple', 'destroyMultiple')->name('destroy-multiple');
     });
 
     Route::prefix('categories')->controller(CategoryController::class)->name('categories.')->group(function () {
@@ -18,12 +19,14 @@ Route::prefix('products')->group(function () {
         Route::post('/', 'store')->name('store');
         Route::put('/{id}', 'update')->name('update');
         Route::delete('/{id}', 'destroy')->name('destroy');
+        Route::delete('/destroy/multiple', 'destroyMultiple')->name('destroy-multiple');
     });
 
     Route::controller(ProductController::class)->name('products.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
-        Route::put('/{id}', 'update')->name('update');
+        Route::post('/{id}', 'update')->name('update');
         Route::delete('/{id}', 'destroy')->name('destroy');
+        Route::delete('/destroy/multiple', 'destroyMultiple')->name('destroy-multiple');
     });
 });

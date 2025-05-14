@@ -3,24 +3,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { NavGroup } from '@/types';
 import { Link } from '@inertiajs/react';
-import {
-    AlertTriangle,
-    Boxes,
-    CalendarClock,
-    ClipboardList,
-    CreditCard,
-    FileText,
-    Home,
-    LayoutGrid,
-    Package,
-    Settings,
-    Tags,
-    Undo2,
-    UserCheck,
-    UserCog,
-    Users,
-    Wrench,
-} from 'lucide-react';
+import { CalendarClock, Home, LayoutGrid, Package, Settings, Tags, Undo2, UserCheck, UserCog, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const navGroupItems: NavGroup[] = [
@@ -59,56 +42,56 @@ const navGroupItems: NavGroup[] = [
         items: [
             {
                 title: 'Penyewaan',
-                href: '/rentals',
+                href: route('rentals.index'),
                 icon: CalendarClock,
             },
             {
                 title: 'Pengembalian',
-                href: '/returns',
+                href: route('returns.index'),
                 icon: Undo2,
             },
-            {
-                title: 'Pembayaran',
-                href: '/payments',
-                icon: CreditCard,
-            },
+            // {
+            //     title: 'Pembayaran',
+            //     href: '/payments',
+            //     icon: CreditCard,
+            // },
         ],
     },
-    {
-        title: 'Inventaris',
-        items: [
-            {
-                title: 'Stok Alat',
-                href: '/inventory',
-                icon: Boxes,
-            },
-            {
-                title: 'Perawatan',
-                href: '/maintenance',
-                icon: Wrench,
-            },
-            {
-                title: 'Kerusakan',
-                href: '/damages',
-                icon: AlertTriangle,
-            },
-        ],
-    },
-    {
-        title: 'Laporan',
-        items: [
-            {
-                title: 'Riwayat Transaksi',
-                href: '/reports/transactions',
-                icon: FileText,
-            },
-            {
-                title: 'Laporan Stok',
-                href: '/reports/stock',
-                icon: ClipboardList,
-            },
-        ],
-    },
+    // {
+    //     title: 'Inventaris',
+    //     items: [
+    //         {
+    //             title: 'Stok Alat',
+    //             href: '/inventory',
+    //             icon: Boxes,
+    //         },
+    //         {
+    //             title: 'Perawatan',
+    //             href: '/maintenance',
+    //             icon: Wrench,
+    //         },
+    //         {
+    //             title: 'Kerusakan',
+    //             href: '/damages',
+    //             icon: AlertTriangle,
+    //         },
+    //     ],
+    // },
+    // {
+    //     title: 'Laporan',
+    //     items: [
+    //         {
+    //             title: 'Riwayat Transaksi',
+    //             href: '/reports/transactions',
+    //             icon: FileText,
+    //         },
+    //         {
+    //             title: 'Laporan Stok',
+    //             href: '/reports/stock',
+    //             icon: ClipboardList,
+    //         },
+    //     ],
+    // },
     {
         title: 'Pengguna',
         items: [
