@@ -41,3 +41,19 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+interface TableRequest<TData extends {}> {
+    page: number;
+    size: number;
+    globalFilter: string;
+    sorting: Partial<Record<keyof TData, 'asc' | 'desc'>>;
+    filters: Partial<Record<keyof TData, any>>;
+}
+
+type TableResponse<TData extends {}, Query extends string> = {
+    [P in Query]: TData[];
+} & {
+    prevPage: number | null;
+    nextPage: number | null;
+    rowCount: number;
+};

@@ -1,30 +1,126 @@
-import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
+import { NavGroup } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { CalendarClock, Home, LayoutGrid, Package, Settings, Tags, Undo2, UserCheck, UserCog, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 
-const mainNavItems: NavItem[] = [
+const navGroupItems: NavGroup[] = [
     {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-];
-
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
+        title: 'Menu',
+        items: [
+            {
+                title: 'Beranda',
+                href: route('dashboard'),
+                icon: Home,
+            },
+        ],
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
+        title: 'Katalog Produk',
+        items: [
+            {
+                title: 'Produk',
+                href: route('products.index'),
+                icon: Package,
+            },
+            {
+                title: 'Varian',
+                href: route('variants.index'),
+                icon: LayoutGrid,
+            },
+            {
+                title: 'Kategori',
+                href: route('categories.index'),
+                icon: Tags,
+            },
+        ],
+    },
+    {
+        title: 'Transaksi',
+        items: [
+            {
+                title: 'Penyewaan',
+                href: route('rentals.index'),
+                icon: CalendarClock,
+            },
+            {
+                title: 'Pengembalian',
+                href: route('returns.index'),
+                icon: Undo2,
+            },
+            // {
+            //     title: 'Pembayaran',
+            //     href: '/payments',
+            //     icon: CreditCard,
+            // },
+        ],
+    },
+    // {
+    //     title: 'Inventaris',
+    //     items: [
+    //         {
+    //             title: 'Stok Alat',
+    //             href: '/inventory',
+    //             icon: Boxes,
+    //         },
+    //         {
+    //             title: 'Perawatan',
+    //             href: '/maintenance',
+    //             icon: Wrench,
+    //         },
+    //         {
+    //             title: 'Kerusakan',
+    //             href: '/damages',
+    //             icon: AlertTriangle,
+    //         },
+    //     ],
+    // },
+    // {
+    //     title: 'Laporan',
+    //     items: [
+    //         {
+    //             title: 'Riwayat Transaksi',
+    //             href: '/reports/transactions',
+    //             icon: FileText,
+    //         },
+    //         {
+    //             title: 'Laporan Stok',
+    //             href: '/reports/stock',
+    //             icon: ClipboardList,
+    //         },
+    //     ],
+    // },
+    {
+        title: 'Pengguna',
+        items: [
+            {
+                title: 'Admin',
+                href: '/admins',
+                icon: UserCheck,
+            },
+            {
+                title: 'Pelanggan',
+                href: '/customers',
+                icon: Users,
+            },
+            {
+                title: 'Staf',
+                href: '/employees',
+                icon: UserCog,
+            },
+        ],
+    },
+    {
+        title: 'Pengaturan',
+        items: [
+            {
+                title: 'Konfigurasi Sistem',
+                href: '/settings',
+                icon: Settings,
+            },
+        ],
     },
 ];
 
@@ -35,7 +131,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href="/dashboard" prefetch>
+                            <Link href={route('dashboard')} prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
@@ -43,12 +139,13 @@ export function AppSidebar() {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent>
-                <NavMain items={mainNavItems} />
+            <SidebarContent className="scrollbar-hide">
+                {navGroupItems.map((group) => (
+                    <NavMain key={group.title} title={group.title} items={group.items} />
+                ))}
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

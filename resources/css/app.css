@@ -167,3 +167,25 @@
         max-width: 1400px;
     }
 }
+
+/* Hide scrollbar (Chrome, Edge, Safari) */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar (Firefox) */
+.scrollbar-hide {
+    scrollbar-width: none;
+}
+
+/* For WebKit browsers */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* For Firefox */
+input[type='number'] {
+    -moz-appearance: textfield;
+}

@@ -16,13 +16,13 @@ export default function Home() {
                             <span className="text-primary mr-2">
                                 <Badge>New</Badge>
                             </span>
-                            <span> Design is out now! </span>
+                            <span> Project is out now! </span>
                         </Badge>
 
                         <div className="mx-auto max-w-screen-md text-center text-4xl font-bold md:text-6xl">
                             <h1>
                                 Experience the
-                                <span className="to-primary bg-gradient-to-r from-[#D247BF] bg-clip-text px-2 text-transparent">Shadcn</span>
+                                <span className="to-primary bg-gradient-to-r from-[#D247BF] bg-clip-text px-2 text-transparent">Nature Gear</span>
                                 landing page
                             </h1>
                         </div>
@@ -39,7 +39,7 @@ export default function Home() {
                             </Button>
 
                             <Button asChild variant="secondary" className="w-5/6 font-bold md:w-1/4">
-                                <Link href="https://github.com/nobruf/shadcn-landing-page.git" target="_blank">
+                                <Link href="https://github.com/ramdacodes" target="_blank">
                                     Github respository
                                 </Link>
                             </Button>
