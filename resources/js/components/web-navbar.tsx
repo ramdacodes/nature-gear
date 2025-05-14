@@ -1,8 +1,8 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Link } from '@inertiajs/react';
-import { ChevronsDown, Menu } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import { Menu } from 'lucide-react';
 import React from 'react';
 import AppLogoIcon from './app-logo-icon';
 import AppearanceToggleDropdown from './appearance-dropdown';
@@ -35,8 +35,18 @@ const routeList: RouteProps[] = [
     },
 ];
 
+function getPathname(url: string): string {
+    try {
+        return new URL(url, window.location.origin).pathname.replace(/\/+$/, '');
+    } catch {
+        return url.replace(/\/+$/, '');
+    }
+}
+
 export const Navbar = () => {
+    const page = usePage();
     const [isOpen, setIsOpen] = React.useState(false);
+
     return (
         <header className="bg-opacity-15 border-secondary bg-card sticky top-5 z-40 mx-auto flex w-[90%] items-center justify-between rounded-2xl border p-2 md:w-[70%] lg:w-[75%] lg:max-w-screen-xl">
             <Link href="/" className="flex items-center text-base font-bold">
@@ -55,19 +65,41 @@ export const Navbar = () => {
                         <div>
                             <SheetHeader className="mb-4 ml-4">
                                 <SheetTitle className="flex items-center">
-                                    <Link href="/" className="flex items-center">
-                                        <ChevronsDown className="border-secondary from-primary via-primary/70 to-primary mr-2 h-9 w-9 rounded-lg border bg-gradient-to-tr text-white" />
+                                    <Link href="/" className="flex items-center text-base font-bold">
+                                        <div className="mr-2">
+                                            <AppLogoIcon className="size-10" />
+                                        </div>
                                         Nature Gear
                                     </Link>
                                 </SheetTitle>
                             </SheetHeader>
 
                             <div className="flex flex-col gap-2">
-                                {routeList.map(({ href, label }) => (
-                                    <Button key={href} onClick={() => setIsOpen(false)} asChild variant="ghost" className="justify-start text-base">
-                                        <Link href={href}>{label}</Link>
-                                    </Button>
-                                ))}
+                                {routeList.map(({ href, label }) => {
+                                    const currentPath = getPathname(page.url);
+                                    const itemPath = getPathname(href);
+
+                                    const currentSegments = currentPath.split('/').filter(Boolean);
+                                    const itemSegments = itemPath.split('/').filter(Boolean);
+
+                                    const isActive =
+                                        currentSegments.length === itemSegments.length &&
+                                        currentSegments.every((seg, idx) => seg === itemSegments[idx]);
+
+                                    return (
+                                        <Button
+                                            key={href}
+                                            onClick={() => setIsOpen(false)}
+                                            asChild
+                                            variant="ghost"
+                                            className="justify-start text-base"
+                                        >
+                                            <Link href={href} className={cn('px-2 text-sm', isActive ? 'font-bold decoration-2' : '')}>
+                                                {label}
+                                            </Link>
+                                        </Button>
+                                    );
+                                })}
                             </div>
                         </div>
 
@@ -83,13 +115,24 @@ export const Navbar = () => {
             <NavigationMenu className="mx-auto hidden lg:block">
                 <NavigationMenuList>
                     <NavigationMenuItem>
-                        {routeList.map(({ href, label }) => (
-                            <NavigationMenuLink key={href} asChild>
-                                <Link href={href} className={cn('px-2 text-sm', label == 'Beranda' ? 'font-bold decoration-2' : '')}>
-                                    {label}
-                                </Link>
-                            </NavigationMenuLink>
-                        ))}
+                        {routeList.map(({ href, label }) => {
+                            const currentPath = getPathname(page.url);
+                            const itemPath = getPathname(href);
+
+                            const currentSegments = currentPath.split('/').filter(Boolean);
+                            const itemSegments = itemPath.split('/').filter(Boolean);
+
+                            const isActive =
+                                currentSegments.length === itemSegments.length && currentSegments.every((seg, idx) => seg === itemSegments[idx]);
+
+                            return (
+                                <NavigationMenuLink key={href} asChild>
+                                    <Link href={href} className={cn('px-2 text-sm', isActive ? 'font-bold decoration-2' : '')}>
+                                        {label}
+                                    </Link>
+                                </NavigationMenuLink>
+                            );
+                        })}
                     </NavigationMenuItem>
                 </NavigationMenuList>
             </NavigationMenu>
