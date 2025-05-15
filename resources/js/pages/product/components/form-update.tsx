@@ -29,6 +29,16 @@ interface PageData extends SharedData {
     }[];
 }
 
+interface UpdateProductFormProps {
+    id: number;
+    name: string;
+    category_id: string | null;
+    variant_id: string | null;
+    price_per_day: number;
+    description: string;
+    closeSheet(): void;
+}
+
 const formSchema = z.object({
     name: z.string().nonempty('Nama harus diisi'),
     category_id: z.string().nonempty('Kategori harus diisi'),
@@ -44,10 +54,11 @@ const formSchema = z.object({
         })
         .refine((file) => file.size <= 2 * 1024 * 1024, {
             message: 'Ukuran gambar tidak boleh lebih dari 2 MB',
-        }),
+        })
+        .optional(),
 });
 
-export default function CreateProductForm() {
+export default function UpdateProductForm({ id, name, category_id, variant_id, price_per_day, description, closeSheet }: UpdateProductFormProps) {
     const { categories, variants } = usePage<PageData>().props;
 
     const [openSelect, setOpenSelect] = useState({
@@ -56,18 +67,18 @@ export default function CreateProductForm() {
     });
     const [errors, setErrors] = useState<Record<string, string>>({});
 
-    const { createProduct } = useProductMutation();
+    const { updateProduct } = useProductMutation();
 
-    const { setSheetOpen, queryClient } = useProductContext();
+    const { queryClient } = useProductContext();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: '',
-            category_id: '',
-            variant_id: '',
-            price_per_day: '',
-            description: '',
+            name: name,
+            category_id: category_id ?? '',
+            variant_id: variant_id ?? '',
+            price_per_day: String(price_per_day),
+            description: description,
         },
     });
 
@@ -78,30 +89,36 @@ export default function CreateProductForm() {
             image_1: values.image_1,
         };
 
-        createProduct.mutate(data, {
-            onSuccess: ({ message }) => {
-                toast.success(message);
-
-                form.reset();
-
-                queryClient.invalidateQueries({
-                    queryKey: [PRODUCT_LIST],
-                });
-
-                setSheetOpen(false);
+        updateProduct.mutate(
+            {
+                id,
+                data,
             },
-            onError: (error) => {
-                if (axios.isAxiosError(error) && error.response) {
-                    toast.error(error.response.data.message);
+            {
+                onSuccess: ({ message }) => {
+                    toast.success(message);
 
-                    if (error.response.status === 422) {
-                        setErrors(error.response.data.errors as Record<string, string>);
+                    form.reset();
+
+                    queryClient.invalidateQueries({
+                        queryKey: [PRODUCT_LIST],
+                    });
+
+                    closeSheet();
+                },
+                onError: (error) => {
+                    if (axios.isAxiosError(error) && error.response) {
+                        toast.error(error.response.data.message);
+
+                        if (error.response.status === 422) {
+                            setErrors(error.response.data.errors as Record<string, string>);
+                        }
+                    } else {
+                        toast.error(error.message);
                     }
-                } else {
-                    toast.error(error.message);
-                }
+                },
             },
-        });
+        );
     };
 
     return (
@@ -347,8 +364,8 @@ export default function CreateProductForm() {
                         />
                     </div>
 
-                    <Button type="submit" loading={createProduct.isPending} className="" size="sm">
-                        Simpan
+                    <Button type="submit" loading={updateProduct.isPending} className="" size="sm">
+                        Simpan Perubahan
                     </Button>
                 </div>
             </form>

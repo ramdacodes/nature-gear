@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Product\Variant\CreateVariantRequest;
+use App\Http\Requests\Product\Variant\UpdateVariantRequest;
 use App\Http\Resources\Product\VariantResource;
 use App\Models\Variant;
+use Exception;
 use Illuminate\Http\Request;
 
 class VariantController extends Controller
@@ -55,17 +58,43 @@ class VariantController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateVariantRequest $request)
     {
-        //
+        try {
+            Variant::create($request->validated());
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Varian berhasil ditambahkan',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateVariantRequest $request, string $id)
     {
-        //
+        try {
+            $variant = Variant::findOrFail($id);
+
+            $variant->update($request->validated());
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Varian berhasil diperbarui',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -73,6 +102,42 @@ class VariantController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $variant = Variant::findOrFail($id);
+
+            $variant->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Varian berhasil dihapus',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroyMultiple(Request $request)
+    {
+        try {
+            $ids = $request->input('ids');
+
+            Variant::whereIn('id', $ids)->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Varian terpilih berhasil dihapus',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

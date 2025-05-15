@@ -1,17 +1,17 @@
 import { createColumnHelper } from '@tanstack/react-table';
-import { MoreHorizontal } from 'lucide-react';
+import { Loader, MoreHorizontal } from 'lucide-react';
 import { useState } from 'react';
 
-// import {
-//     AlertDialog,
-//     AlertDialogAction,
-//     AlertDialogCancel,
-//     AlertDialogContent,
-//     AlertDialogDescription,
-//     AlertDialogFooter,
-//     AlertDialogHeader,
-//     AlertDialogTitle,
-// } from '@/components/ui/alert-dialog';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/ui/data-table';
@@ -23,9 +23,15 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { PRODUCT_CATEGORY_LIST } from '@/constants';
+import { useCategoryMutation } from '@/hooks/product/category';
 import { formatDateTimeString } from '@/lib/utils';
 import { useCategoryContext } from '@/pages/product/category/category.context';
 import { CategoryResponse } from '@/services/product/category/types';
+import axios from 'axios';
+import { toast } from 'sonner';
+import UpdateCategoryForm from './form-update';
 
 export const columnLabel: Record<keyof CategoryResponse, string> = {
     id: 'ID',
@@ -110,6 +116,8 @@ export const columns = [
 
             const { queryClient } = useCategoryContext();
 
+            const { deleteCategory } = useCategoryMutation();
+
             return (
                 <>
                     <DropdownMenu>
@@ -121,57 +129,77 @@ export const columns = [
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-                            <DropdownMenuItem onClick={() => setSheetOpen(true)}>
+                            <DropdownMenuItem
+                                onSelect={() => {
+                                    setTimeout(() => setSheetOpen(true), 0);
+                                }}
+                            >
                                 <span>Edit</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
 
-                            <DropdownMenuItem onClick={() => setIsDialogDeleteOpen(true)}>
+                            <DropdownMenuItem
+                                onSelect={() => {
+                                    setTimeout(() => setIsDialogDeleteOpen(true), 0);
+                                }}
+                            >
                                 <span>Hapus</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
 
-                    {/* <AlertDialog open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen}>
+                    <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+                        <SheetContent className="scrollbar-hide max-h-screen overflow-y-scroll">
+                            <SheetHeader>
+                                <SheetTitle>Edit Data Varian</SheetTitle>
+                                <SheetDescription>Lengkapi data dibawah ini untuk memperbarui varian</SheetDescription>
+                            </SheetHeader>
+                            <div className="mt-4">
+                                <UpdateCategoryForm id={data.id} name={data.name} closeSheet={() => setSheetOpen(false)} />
+                            </div>
+                        </SheetContent>
+                    </Sheet>
+
+                    <AlertDialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
                         <AlertDialogContent>
                             <AlertDialogHeader>
-                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                <AlertDialogTitle>Apakah Anda benar-benar yakin?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    This action cannot be undone. Are you sure you want to permanently delete this data or file from the server?
+                                    Tindakan ini tidak dapat dibatalkan. Apakah Anda yakin ingin menghapus data ini secara permanen dari server?
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogCancel>Batal</AlertDialogCancel>
                                 <AlertDialogAction
-                                    disabled={deleteVariant.isPending}
+                                    disabled={deleteCategory.isPending}
                                     onClick={(e) => {
                                         e.preventDefault();
 
-                                        deleteVariant.mutate(data.id, {
-                                            onSuccess: () => {
-                                                toast.success('Variant deleted successfully');
+                                        deleteCategory.mutate(data.id, {
+                                            onSuccess: ({ message }) => {
+                                                toast.success(message);
 
                                                 queryClient.invalidateQueries({
-                                                    queryKey: [PRODUCT_LIST],
+                                                    queryKey: [PRODUCT_CATEGORY_LIST],
                                                 });
 
-                                                setIsAlertDialogOpen(false);
+                                                setIsDialogDeleteOpen(false);
                                             },
                                             onError: (error) => {
                                                 if (axios.isAxiosError(error) && error.response) {
                                                     toast.error(error.response.data.message);
                                                 } else {
-                                                    toast.error('Something went wrong');
+                                                    toast.error(error.message);
                                                 }
                                             },
                                         });
                                     }}
                                 >
-                                    {deleteVariant.isPending ? <Loader className="text-muted h-4 w-4 animate-spin" /> : 'Delete'}
+                                    {deleteCategory.isPending ? <Loader className="text-muted h-4 w-4 animate-spin" /> : 'Hapus'}
                                 </AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
-                    </AlertDialog>  */}
+                    </AlertDialog>
                 </>
             );
         },

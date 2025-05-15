@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\Variant;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -79,11 +80,31 @@ class ProductController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * @param \App\Http\Requests\CreateProductRequest $request
      */
     public function store(CreateProductRequest $request)
     {
         try {
-            Product::create($request->validated());
+            $data = $request->validated();
+
+            $imageName = null;
+
+            if ($request->hasFile('image_1')) {
+                $image = $request->file('image_1');
+
+                $imageName = $image->hashName();
+
+                $image->storeAs('images/products', $imageName, 'public');
+            }
+
+            Product::create([
+                'name' => $data['name'],
+                'category_id' => $data['category_id'],
+                'variant_id' => $data['variant_id'],
+                'price_per_day' => $data['price_per_day'],
+                'description' => $data['description'],
+                'image_1' => $imageName,
+            ]);
 
             return response()->json([
                 'success' => true,
@@ -97,12 +118,51 @@ class ProductController extends Controller
         }
     }
 
+
     /**
      * Update the specified resource in storage.
+     * @param \App\Http\Requests\UpdateProductRequest $request
      */
     public function update(UpdateProductRequest $request, string $id)
     {
-        //
+        try {
+            $product = Product::findOrFail($id);
+
+            $data = $request->validated();
+
+            if ($request->hasFile('image_1')) {
+                $image_1 = $product->getRawOriginal('image_1');
+                $path = "images/products/brands/{$image_1}";
+
+                if (Storage::disk('public')->exists($path)) {
+                    Storage::disk('public')->delete($path);
+                }
+
+                $image_1 = $request->file('image');
+
+                $image_1->storeAs('images/products', $image_1->hashName(), 'public');
+
+                $product->image_1 = $image_1->hashName();
+            }
+
+            $product->update([
+                'name' => $data['name'],
+                'category_id' => $data['category_id'],
+                'variant_id' => $data['variant_id'],
+                'price_per_day' => $data['price_per_day'],
+                'description' => $data['description'],
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Produk berhasil diperbarui',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -110,13 +170,48 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $product = Product::findOrFail($id);
+
+            $image_1 = $product->getRawOriginal('image_1');
+            $path = "images/products/{$image_1}";
+
+            if (Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->delete($path);
+            }
+
+            $product->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Produk berhasil dihapus',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroyMultiple(Request $request)
     {
         try {
             $ids = $request->input('ids');
+
+            foreach ($ids as $id) {
+                $product = Product::findOrFail($id);
+
+                $image_1 = $product->getRawOriginal('image_1');
+                $path = "images/products/{$image_1}";
+
+                if (Storage::disk('public')->exists($path)) {
+                    Storage::disk('public')->delete($path);
+                }
+            }
 
             Product::whereIn('id', $ids)->delete();
 
