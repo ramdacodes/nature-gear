@@ -1,17 +1,17 @@
 import { createColumnHelper } from '@tanstack/react-table';
-import { MoreHorizontal } from 'lucide-react';
+import { Loader, MoreHorizontal } from 'lucide-react';
 import { useState } from 'react';
 
-// import {
-//     AlertDialog,
-//     AlertDialogAction,
-//     AlertDialogCancel,
-//     AlertDialogContent,
-//     AlertDialogDescription,
-//     AlertDialogFooter,
-//     AlertDialogHeader,
-//     AlertDialogTitle,
-// } from '@/components/ui/alert-dialog';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTableColumnHeader } from '@/components/ui/data-table';
@@ -23,9 +23,15 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { PRODUCT_LIST } from '@/constants';
+import { useProductMutation } from '@/hooks/product';
 import { formatDateTimeString, numberFormat } from '@/lib/utils';
 import { useProductContext } from '@/pages/product/product.context';
 import { ProductResponse } from '@/services/product/types';
+import axios from 'axios';
+import { toast } from 'sonner';
+import UpdateProductForm from './form-update';
 
 export const columnLabel: Record<keyof ProductResponse, string> = {
     id: 'ID',
@@ -177,6 +183,8 @@ export const columns = [
 
             const { queryClient } = useProductContext();
 
+            const { deleteProduct } = useProductMutation();
+
             return (
                 <>
                     <DropdownMenu>
@@ -188,57 +196,85 @@ export const columns = [
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-                            <DropdownMenuItem onClick={() => setSheetOpen(true)}>
+                            <DropdownMenuItem
+                                onSelect={() => {
+                                    setTimeout(() => setSheetOpen(true), 0);
+                                }}
+                            >
                                 <span>Edit</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
 
-                            <DropdownMenuItem onClick={() => setIsDialogDeleteOpen(true)}>
+                            <DropdownMenuItem
+                                onSelect={() => {
+                                    setTimeout(() => setIsDialogDeleteOpen(true), 0);
+                                }}
+                            >
                                 <span>Hapus</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
 
-                    {/* <AlertDialog open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen}>
+                    <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+                        <SheetContent className="scrollbar-hide max-h-screen overflow-y-scroll">
+                            <SheetHeader>
+                                <SheetTitle>Edit Data Produk</SheetTitle>
+                                <SheetDescription>Lengkapi data dibawah ini untuk memperbarui produk</SheetDescription>
+                            </SheetHeader>
+                            <div className="mt-4">
+                                <UpdateProductForm
+                                    id={data.id}
+                                    name={data.name}
+                                    category_id={data.category ? String(data.category.id) : null}
+                                    variant_id={data.variant ? String(data.variant.id) : null}
+                                    price_per_day={data.price_per_day}
+                                    description={data.description}
+                                    closeSheet={() => setSheetOpen(false)}
+                                />
+                            </div>
+                        </SheetContent>
+                    </Sheet>
+
+                    <AlertDialog open={isDialogDeleteOpen} onOpenChange={setIsDialogDeleteOpen}>
                         <AlertDialogContent>
                             <AlertDialogHeader>
-                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                <AlertDialogTitle>Apakah Anda benar-benar yakin?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    This action cannot be undone. Are you sure you want to permanently delete this data or file from the server?
+                                    Tindakan ini tidak dapat dibatalkan. Apakah Anda yakin ingin menghapus data ini secara permanen dari server?
                                 </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogCancel>Batal</AlertDialogCancel>
                                 <AlertDialogAction
                                     disabled={deleteProduct.isPending}
                                     onClick={(e) => {
                                         e.preventDefault();
 
                                         deleteProduct.mutate(data.id, {
-                                            onSuccess: () => {
-                                                toast.success('Product deleted successfully');
+                                            onSuccess: ({ message }) => {
+                                                toast.success(message);
 
                                                 queryClient.invalidateQueries({
                                                     queryKey: [PRODUCT_LIST],
                                                 });
 
-                                                setIsAlertDialogOpen(false);
+                                                setIsDialogDeleteOpen(false);
                                             },
                                             onError: (error) => {
                                                 if (axios.isAxiosError(error) && error.response) {
                                                     toast.error(error.response.data.message);
                                                 } else {
-                                                    toast.error('Something went wrong');
+                                                    toast.error(error.message);
                                                 }
                                             },
                                         });
                                     }}
                                 >
-                                    {deleteProduct.isPending ? <Loader className="text-muted h-4 w-4 animate-spin" /> : 'Delete'}
+                                    {deleteProduct.isPending ? <Loader className="text-muted h-4 w-4 animate-spin" /> : 'Hapus'}
                                 </AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
-                    </AlertDialog>  */}
+                    </AlertDialog>
                 </>
             );
         },

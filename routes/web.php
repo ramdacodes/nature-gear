@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -26,6 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     require __DIR__ . '/product.php';
     require __DIR__ . '/transaction.php';
+    require __DIR__ . '/user.php';
 });
 
 require __DIR__ . '/auth.php';

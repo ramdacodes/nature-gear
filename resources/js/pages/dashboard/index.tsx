@@ -1,17 +1,27 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { numberFormat } from '@/lib/utils';
+import { BreadcrumbItem, SharedData } from '@/types';
+import { Head, usePage } from '@inertiajs/react';
 import { CalendarClock, CreditCard, Package, Users } from 'lucide-react';
+
+interface PageData extends SharedData {
+    totalRent: number;
+    totalProduct: number;
+    totalCustomer: number;
+    totalIncomeMonth: number;
+}
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Beranda',
         href: route('dashboard'),
     },
 ];
 
 export default function Dashboard() {
+    const { totalRent, totalProduct, totalCustomer, totalIncomeMonth } = usePage<PageData>().props;
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -27,8 +37,7 @@ export default function Dashboard() {
                             <CalendarClock className="text-muted-foreground h-4 w-4" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">128</div>
-                            <p className="text-muted-foreground text-xs">+12% dari minggu lalu</p>
+                            <div className="text-2xl font-bold">{totalRent}</div>
                         </CardContent>
                     </Card>
 
@@ -38,8 +47,7 @@ export default function Dashboard() {
                             <Package className="text-muted-foreground h-4 w-4" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">342</div>
-                            <p className="text-muted-foreground text-xs">Tersedia untuk disewa</p>
+                            <div className="text-2xl font-bold">{totalProduct}</div>
                         </CardContent>
                     </Card>
 
@@ -49,8 +57,7 @@ export default function Dashboard() {
                             <Users className="text-muted-foreground h-4 w-4" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">89</div>
-                            <p className="text-muted-foreground text-xs">+3 pelanggan baru hari ini</p>
+                            <div className="text-2xl font-bold">{totalCustomer}</div>
                         </CardContent>
                     </Card>
 
@@ -60,8 +67,7 @@ export default function Dashboard() {
                             <CreditCard className="text-muted-foreground h-4 w-4" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">Rp 12.500.000</div>
-                            <p className="text-muted-foreground text-xs">+5% dari bulan lalu</p>
+                            <div className="text-2xl font-bold">{numberFormat(totalIncomeMonth)}</div>
                         </CardContent>
                     </Card>
                 </div>

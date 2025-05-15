@@ -35,6 +35,16 @@ const formSchema = z.object({
     variant_id: z.string().nonempty('Varian harus diisi'),
     price_per_day: z.string().nonempty('Harga per hari harus diisi'),
     description: z.string().nonempty('Deskripsi harus diisi'),
+    image_1: z
+        .custom<File>((file) => file instanceof File, {
+            message: 'File harus berupa gambar',
+        })
+        .refine((file) => ['image/jpeg', 'image/png', 'image/jpg'].includes(file.type), {
+            message: 'Gambar harus berupa JPEG, PNG, atau JPG',
+        })
+        .refine((file) => file.size <= 2 * 1024 * 1024, {
+            message: 'Ukuran gambar tidak boleh lebih dari 2 MB',
+        }),
 });
 
 export default function CreateProductForm() {
@@ -65,7 +75,7 @@ export default function CreateProductForm() {
         const data = {
             ...values,
             price_per_day: Number(values.price_per_day),
-            image_1: null,
+            image_1: values.image_1,
         };
 
         createProduct.mutate(data, {
@@ -300,6 +310,36 @@ export default function CreateProductForm() {
                                     <FormLabel>Deskripsi</FormLabel>
                                     <FormControl>
                                         <Textarea placeholder="Silakan masukkan deskripsi" autoComplete="off" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+
+                    <div className="grid gap-2">
+                        <FormField
+                            control={form.control}
+                            name="image_1"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Gambar</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Silakan masukkan gambar"
+                                            type="file"
+                                            autoComplete="off"
+                                            onChange={(e) => {
+                                                const file = e.target.files?.[0];
+                                                if (file) {
+                                                    form.setValue('image_1', file);
+                                                }
+                                            }}
+                                            accept="image/*"
+                                            onBlur={field.onBlur}
+                                            name={field.name}
+                                            ref={field.ref}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

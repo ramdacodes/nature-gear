@@ -3,7 +3,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { NavGroup } from '@/types';
 import { Link } from '@inertiajs/react';
-import { CalendarClock, Home, LayoutGrid, Package, Settings, Tags, Undo2, UserCheck, UserCog, Users } from 'lucide-react';
+import { CalendarClock, Home, LayoutGrid, Package, Tags, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const navGroupItems: NavGroup[] = [
@@ -45,11 +45,11 @@ const navGroupItems: NavGroup[] = [
                 href: route('rentals.index'),
                 icon: CalendarClock,
             },
-            {
-                title: 'Pengembalian',
-                href: route('returns.index'),
-                icon: Undo2,
-            },
+            // {
+            //     title: 'Pengembalian',
+            //     href: route('returns.index'),
+            //     icon: Undo2,
+            // },
             // {
             //     title: 'Pembayaran',
             //     href: '/payments',
@@ -95,33 +95,33 @@ const navGroupItems: NavGroup[] = [
     {
         title: 'Pengguna',
         items: [
-            {
-                title: 'Admin',
-                href: '/admins',
-                icon: UserCheck,
-            },
+            // {
+            //     title: 'Admin',
+            //     href: '/admins',
+            //     icon: UserCheck,
+            // },
             {
                 title: 'Pelanggan',
-                href: '/customers',
+                href: route('customers.index'),
                 icon: Users,
             },
-            {
-                title: 'Staf',
-                href: '/employees',
-                icon: UserCog,
-            },
+            // {
+            //     title: 'Staf',
+            //     href: '/employees',
+            //     icon: UserCog,
+            // },
         ],
     },
-    {
-        title: 'Pengaturan',
-        items: [
-            {
-                title: 'Konfigurasi Sistem',
-                href: '/settings',
-                icon: Settings,
-            },
-        ],
-    },
+    // {
+    //     title: 'Pengaturan',
+    //     items: [
+    //         {
+    //             title: 'Konfigurasi Sistem',
+    //             href: '/settings',
+    //             icon: Settings,
+    //         },
+    //     ],
+    // },
 ];
 
 export function AppSidebar() {

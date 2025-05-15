@@ -13,11 +13,9 @@ const useProductMutation = () => {
             formData.append('price_per_day', data.price_per_day.toString());
             formData.append('description', data.description);
 
-            formData.append('image_1', 'tes');
-
-            // if (data.image_1) {
-            //     formData.append('image_1', data.image_1);
-            // }
+            if (data.image_1) {
+                formData.append('image_1', data.image_1);
+            }
 
             if (data.image_2) {
                 formData.append('image_2', data.image_2);

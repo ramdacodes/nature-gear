@@ -1,11 +1,22 @@
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { DataTable, DataTablePagination, DataTableToolbar } from '@/components/ui/data-table';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { PRODUCT_CATEGORY_LIST } from '@/constants';
+import { useCategoryMutation } from '@/hooks/product/category';
 import useTableQuery from '@/hooks/use-table-query';
 import AppLayout from '@/layouts/app-layout';
 import { CategoryContext } from '@/pages/product/category/category.context';
-import { columnLabel, columns } from '@/pages/product/category/components';
+import { columnLabel, columns, CreateCategoryForm } from '@/pages/product/category/components';
 import { listCategories } from '@/services/product/category';
 import { CategoryResponse } from '@/services/product/category/types';
 import { BreadcrumbItem } from '@/types';
@@ -24,11 +35,13 @@ import {
     useReactTable,
     VisibilityState,
 } from '@tanstack/react-table';
-import { PlusCircle, Trash2 } from 'lucide-react';
+import axios from 'axios';
+import { Loader, PlusCircle, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { toast } from 'sonner';
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Beranda',
         href: route('dashboard'),
     },
     {
@@ -54,6 +67,8 @@ export default function Category() {
         pageIndex: Math.max(0, pageIndex - 1),
         pageSize: Number(searchParams.get('size')) || 10,
     });
+
+    const { deleteMultipleCategory } = useCategoryMutation();
 
     const tableQuery = useTableQuery({
         queryKey: [PRODUCT_CATEGORY_LIST, columnFilters, globalFilter, pagination, sorting],
@@ -162,7 +177,9 @@ export default function Category() {
                                             <SheetTitle>Tambah Data Kategori</SheetTitle>
                                             <SheetDescription>Lengkapi data dibawah ini untuk menambahkan kategori</SheetDescription>
                                         </SheetHeader>
-                                        <div className="mt-4">{/* <CreateGineeCategoryForm /> */}</div>
+                                        <div className="mt-4">
+                                            <CreateCategoryForm />
+                                        </div>
                                     </SheetContent>
                                 </Sheet>
                             </div>
@@ -186,19 +203,19 @@ export default function Category() {
                                         <Trash2 className="h-4 w-4" />
                                         Hapus
                                     </Button>
-                                    {/* <AlertDialog open={dialogDeleteOpen} onOpenChange={setDialogDeleteOpen}>
+                                    <AlertDialog open={dialogDeleteOpen} onOpenChange={setDialogDeleteOpen}>
                                         <AlertDialogContent>
                                             <AlertDialogHeader>
-                                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                                <AlertDialogTitle>Apakah Anda benar-benar yakin?</AlertDialogTitle>
                                                 <AlertDialogDescription>
-                                                    This action cannot be undone. Are you sure you want to permanently delete this data or file from
-                                                    the server?
+                                                    Tindakan ini tidak dapat dibatalkan. Apakah Anda yakin ingin menghapus data ini secara permanen
+                                                    dari server?
                                                 </AlertDialogDescription>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
-                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                <AlertDialogCancel>Batal</AlertDialogCancel>
                                                 <AlertDialogAction
-                                                    disabled={deleteMultipleProduct.isPending}
+                                                    disabled={deleteMultipleCategory.isPending}
                                                     onClick={(e) => {
                                                         e.preventDefault();
 
@@ -206,12 +223,12 @@ export default function Category() {
                                                             Number(id),
                                                         );
 
-                                                        deleteMultipleProduct.mutate(selectedIds, {
-                                                            onSuccess: () => {
-                                                                toast.success('Product deleted successfully');
+                                                        deleteMultipleCategory.mutate(selectedIds, {
+                                                            onSuccess: ({ message }) => {
+                                                                toast.success(message);
 
                                                                 queryClient.invalidateQueries({
-                                                                    queryKey: [PRODUCT_LIST],
+                                                                    queryKey: [PRODUCT_CATEGORY_LIST],
                                                                 });
 
                                                                 setDialogDeleteOpen(false);
@@ -222,21 +239,23 @@ export default function Category() {
                                                                 if (axios.isAxiosError(error) && error.response) {
                                                                     toast.error(error.response.data.message);
                                                                 } else {
-                                                                    toast.error('Something went wrong');
+                                                                    toast.error(error.message);
                                                                 }
+
+                                                                console.log(error);
                                                             },
                                                         });
                                                     }}
                                                 >
-                                                    {deleteMultipleProduct.isPending ? (
+                                                    {deleteMultipleCategory.isPending ? (
                                                         <Loader className="text-muted h-4 w-4 animate-spin" />
                                                     ) : (
-                                                        'Delete'
+                                                        'Hapus'
                                                     )}
                                                 </AlertDialogAction>
                                             </AlertDialogFooter>
                                         </AlertDialogContent>
-                                    </AlertDialog> */}
+                                    </AlertDialog>
                                 </>
                             ) : (
                                 <></>

@@ -22,7 +22,7 @@ export default function Home() {
                         <div className="mx-auto max-w-screen-md text-center text-4xl font-bold md:text-6xl">
                             <h1>
                                 Experience the
-                                <span className="to-primary bg-gradient-to-r from-[#D247BF] bg-clip-text px-2 text-transparent">Nature Gear</span>
+                                <span className="to-primary bg-gradient-to-r from-[#43793c] bg-clip-text px-2 text-transparent">Nature Gear</span>
                                 landing page
                             </h1>
                         </div>
