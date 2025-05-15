@@ -187,8 +187,8 @@ export const columns = [
                     <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                         <SheetContent className="scrollbar-hide max-h-screen overflow-y-scroll">
                             <SheetHeader>
-                                <SheetTitle>Edit Data Customer</SheetTitle>
-                                <SheetDescription>Lengkapi data dibawah ini untuk memperbarui customer</SheetDescription>
+                                <SheetTitle>Edit Data Pelanggan</SheetTitle>
+                                <SheetDescription>Lengkapi data dibawah ini untuk memperbarui pelanggan</SheetDescription>
                             </SheetHeader>
                             <div className="mt-4">
                                 <UpdateCustomerForm

@@ -4,6 +4,9 @@ namespace App\Http\Requests\User\Customer;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/** 
+ * @method \Illuminate\Routing\Route|null route(string|null $key = null) 
+ */
 class UpdateCustomerRequest extends FormRequest
 {
     /**
@@ -15,7 +18,7 @@ class UpdateCustomerRequest extends FormRequest
     {
         return [
             'name' => ['required'],
-            'email' => ['required', 'email', 'unique:customers,email'],
+            'email' => ['required', 'email', 'unique:customers,email,' . $this->route('id')],
             'phone' => ['required'],
             'address' => ['required'],
         ];

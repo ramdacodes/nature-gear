@@ -175,8 +175,8 @@ export default function Customer() {
                                     </SheetTrigger>
                                     <SheetContent className="scrollbar-hide max-h-screen overflow-y-scroll">
                                         <SheetHeader>
-                                            <SheetTitle>Tambah Data Customer</SheetTitle>
-                                            <SheetDescription>Lengkapi data dibawah ini untuk menambahkan customer</SheetDescription>
+                                            <SheetTitle>Tambah Data Pelanggan</SheetTitle>
+                                            <SheetDescription>Lengkapi data dibawah ini untuk menambahkan pelanggan</SheetDescription>
                                         </SheetHeader>
                                         <div className="mt-4">
                                             <CreateCustomerForm />

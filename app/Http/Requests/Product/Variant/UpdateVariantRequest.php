@@ -4,6 +4,9 @@ namespace App\Http\Requests\Product\Variant;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/** 
+ * @method \Illuminate\Routing\Route|null route(string|null $key = null) 
+ */
 class UpdateVariantRequest extends FormRequest
 {
     /**
@@ -14,7 +17,7 @@ class UpdateVariantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'unique:variants,name'],
+            'name' => ['required', 'unique:variants,name,' . $this->route('id')],
         ];
     }
 

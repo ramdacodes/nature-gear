@@ -4,6 +4,9 @@ namespace App\Http\Requests\Product\Category;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/** 
+ * @method \Illuminate\Routing\Route|null route(string|null $key = null) 
+ */
 class UpdateCategoryRequest extends FormRequest
 {
     /**
@@ -14,7 +17,7 @@ class UpdateCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'unique:categories,name'],
+            'name' => ['required', 'unique:categories,name,' . $this->route('id')],
         ];
     }
 
