@@ -2,7 +2,7 @@ export const PRODUCT_LIST = 'product-list';
 export const PRODUCT_VARIANT_LIST = 'product-variant-list';
 export const PRODUCT_CATEGORY_LIST = 'product-category-list';
 
-export const TRANSACTION_RENT_LIST = 'transaction-rent-list';
+export const TRANSACTION_RENTAL_LIST = 'transaction-rental-list';
 export const TRANSACTION_RETURN_LIST = 'transaction-return-list';
 export const TRANSACTION_PAYMENT_LIST = 'transaction-payment-list';
 

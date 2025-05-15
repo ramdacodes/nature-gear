@@ -10,6 +10,7 @@ Route::prefix('transactions')->group(function () {
         Route::post('/', 'store')->name('store');
         Route::put('/{id}', 'update')->name('update');
         Route::delete('/{id}', 'destroy')->name('destroy');
+        Route::delete('/destroy/multiple', 'destroyMultiple')->name('destroy-multiple');
     });
 
     Route::prefix('returns')->controller(ReturnController::class)->name('returns.')->group(function () {
