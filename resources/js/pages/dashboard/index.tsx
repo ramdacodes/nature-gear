@@ -1,8 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import { BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { BreadcrumbItem, SharedData } from '@/types';
+import { Head, usePage } from '@inertiajs/react';
 import { CalendarClock, CreditCard, Package, Users } from 'lucide-react';
+
+interface PageData extends SharedData {
+    totalProduct: number;
+}
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -12,6 +16,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Dashboard() {
+    const { totalProduct } = usePage<PageData>().props;
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -38,7 +44,7 @@ export default function Dashboard() {
                             <Package className="text-muted-foreground h-4 w-4" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">342</div>
+                            <div className="text-2xl font-bold">{totalProduct}</div>
                             <p className="text-muted-foreground text-xs">Tersedia untuk disewa</p>
                         </CardContent>
                     </Card>
