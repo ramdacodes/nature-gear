@@ -42,7 +42,7 @@ import { toast } from 'sonner';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Beranda',
         href: route('dashboard'),
     },
     {

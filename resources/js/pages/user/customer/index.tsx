@@ -11,14 +11,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { DataTable, DataTablePagination, DataTableToolbar } from '@/components/ui/data-table';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { PRODUCT_VARIANT_LIST } from '@/constants';
-import { useVariantMutation } from '@/hooks/product/variant';
+import { USER_CUSTOMER_LIST } from '@/constants';
 import useTableQuery from '@/hooks/use-table-query';
+import { useCustomerMutation } from '@/hooks/user/customer';
 import AppLayout from '@/layouts/app-layout';
-import { columnLabel, columns, CreateVariantForm } from '@/pages/product/variant/components';
-import { VariantContext } from '@/pages/product/variant/variant.context';
-import { listVariants } from '@/services/product/variant';
-import { VariantResponse } from '@/services/product/variant/types';
+import { columnLabel, columns, CreateCustomerForm } from '@/pages/user/customer/components';
+import { CustomerContext } from '@/pages/user/customer/customer.context';
+import { listCustomers } from '@/services/user/customer';
+import { CustomerResponse } from '@/services/user/customer/types';
 import { BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -46,12 +46,12 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: route('dashboard'),
     },
     {
-        title: 'Varian',
-        href: route('variants.index'),
+        title: 'Pelanggan',
+        href: route('customers.index'),
     },
 ];
 
-export default function Variant() {
+export default function Customer() {
     const searchParams = new URLSearchParams(window.location.search);
     const pageIndex = Number(searchParams.get('page') || 1);
 
@@ -69,11 +69,11 @@ export default function Variant() {
         pageSize: Number(searchParams.get('size')) || 10,
     });
 
-    const { deleteMultipleVariant } = useVariantMutation();
+    const { deleteMultipleCustomer } = useCustomerMutation();
 
     const tableQuery = useTableQuery({
-        queryKey: [PRODUCT_VARIANT_LIST, columnFilters, globalFilter, pagination, sorting],
-        queryFn: listVariants,
+        queryKey: [USER_CUSTOMER_LIST, columnFilters, globalFilter, pagination, sorting],
+        queryFn: listCustomers,
         columnFilters,
         globalFilter,
         pagination,
@@ -91,7 +91,7 @@ export default function Variant() {
     }, [tableQuery.data?.rowCount, pagination.pageSize]);
 
     const table = useReactTable({
-        data: tableQuery.data?.variants || [],
+        data: tableQuery.data?.customers || [],
         columns,
         pageCount,
         enableRowSelection: true,
@@ -155,13 +155,13 @@ export default function Variant() {
     }, [pagination, sorting, columnFilters, globalFilter]);
 
     return (
-        <VariantContext.Provider value={{ sheetOpen, setSheetOpen, queryClient }}>
+        <CustomerContext.Provider value={{ sheetOpen, setSheetOpen, queryClient }}>
             <AppLayout breadcrumbs={breadcrumbs}>
-                <Head title="Varian" />
+                <Head title="Pelanggan" />
 
                 <div className="h-full p-4">
-                    <h2 className="text-xl font-semibold">Varian</h2>
-                    <p className="text-muted-foreground mt-2">Berikut adalah daftar varian yang tersedia</p>
+                    <h2 className="text-xl font-semibold">Pelanggan</h2>
+                    <p className="text-muted-foreground mt-2">Berikut adalah daftar pelanggan yang tersedia</p>
 
                     <div className="py-5">
                         <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -175,11 +175,11 @@ export default function Variant() {
                                     </SheetTrigger>
                                     <SheetContent className="scrollbar-hide max-h-screen overflow-y-scroll">
                                         <SheetHeader>
-                                            <SheetTitle>Tambah Data Varian</SheetTitle>
-                                            <SheetDescription>Lengkapi data dibawah ini untuk menambahkan varian</SheetDescription>
+                                            <SheetTitle>Tambah Data Customer</SheetTitle>
+                                            <SheetDescription>Lengkapi data dibawah ini untuk menambahkan customer</SheetDescription>
                                         </SheetHeader>
                                         <div className="mt-4">
-                                            <CreateVariantForm />
+                                            <CreateCustomerForm />
                                         </div>
                                     </SheetContent>
                                 </Sheet>
@@ -216,7 +216,7 @@ export default function Variant() {
                                             <AlertDialogFooter>
                                                 <AlertDialogCancel>Batal</AlertDialogCancel>
                                                 <AlertDialogAction
-                                                    disabled={deleteMultipleVariant.isPending}
+                                                    disabled={deleteMultipleCustomer.isPending}
                                                     onClick={(e) => {
                                                         e.preventDefault();
 
@@ -224,12 +224,12 @@ export default function Variant() {
                                                             Number(id),
                                                         );
 
-                                                        deleteMultipleVariant.mutate(selectedIds, {
+                                                        deleteMultipleCustomer.mutate(selectedIds, {
                                                             onSuccess: ({ message }) => {
                                                                 toast.success(message);
 
                                                                 queryClient.invalidateQueries({
-                                                                    queryKey: [PRODUCT_VARIANT_LIST],
+                                                                    queryKey: [USER_CUSTOMER_LIST],
                                                                 });
 
                                                                 setDialogDeleteOpen(false);
@@ -248,7 +248,7 @@ export default function Variant() {
                                                         });
                                                     }}
                                                 >
-                                                    {deleteMultipleVariant.isPending ? (
+                                                    {deleteMultipleCustomer.isPending ? (
                                                         <Loader className="text-muted h-4 w-4 animate-spin" />
                                                     ) : (
                                                         'Hapus'
@@ -263,7 +263,7 @@ export default function Variant() {
                             )}
                         </DataTableToolbar>
 
-                        <DataTable<VariantResponse>
+                        <DataTable<CustomerResponse>
                             columns={columns}
                             table={table}
                             isLoading={tableQuery.status === 'pending' || (tableQuery.isFetching && tableQuery.isFetching)}
@@ -275,6 +275,6 @@ export default function Variant() {
                     </div>
                 </div>
             </AppLayout>
-        </VariantContext.Provider>
+        </CustomerContext.Provider>
     );
 }

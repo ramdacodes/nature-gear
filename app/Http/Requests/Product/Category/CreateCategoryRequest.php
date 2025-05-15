@@ -22,7 +22,7 @@ class CreateCategoryRequest extends FormRequest
     {
         return [
             'name.required' => 'Nama kategori harus diisi',
-            'name.unique' => 'Nama kategori sudah ada',
+            'name.unique' => 'Nama kategori sudah terdaftar',
         ];
     }
 }

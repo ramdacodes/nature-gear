@@ -22,7 +22,7 @@ class CreateVariantRequest extends FormRequest
     {
         return [
             'name.required' => 'Nama varian harus diisi',
-            'name.unique' => 'Nama varian sudah ada',
+            'name.unique' => 'Nama varian sudah terdaftar',
         ];
     }
 }

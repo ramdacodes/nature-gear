@@ -10,19 +10,19 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: route('dashboard'),
     },
     {
-        title: 'Pengembalian',
-        href: route('returns.index'),
+        title: 'Pembayaran',
+        href: route('payments.index'),
     },
 ];
 
-export default function Return() {
+export default function Payment() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Pengembalian" />
+            <Head title="Pembayaran" />
 
             <div className="h-full p-4">
-                <h2 className="text-xl font-semibold">Pengembalian</h2>
-                <p className="text-muted-foreground mt-2">Berikut adalah daftar pengembalian yang tersedia</p>
+                <h2 className="text-xl font-semibold">Pembayaran</h2>
+                <p className="text-muted-foreground mt-2">Berikut adalah daftar pembayaran yang tersedia</p>
 
                 <div className="py-5">
                     <Alert className="border border-blue-300 bg-blue-50 text-blue-800 dark:border-blue-600 dark:bg-blue-900 dark:text-blue-100">
