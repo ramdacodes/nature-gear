@@ -28,7 +28,7 @@ class RentalController extends Controller
             $filters = $request->input('filters', []);
             $sorting = $request->input('sorting', []);
 
-            $query = Rental::query();
+            $query = Rental::with('rentalDetail.product');
 
             if (!empty($globalFilter)) {
                 $query->where(function ($q) use ($globalFilter) {
@@ -80,7 +80,8 @@ class RentalController extends Controller
             $startDate = Carbon::parse($data['start_date']);
             $endDate = Carbon::parse($data['end_date']);
 
-            $duration = $endDate->diffInDays($startDate);
+            $duration = max(1, $endDate->diffInDays($startDate));
+
 
             $rental = Rental::create([
                 'customer_id' => $data['customer_id'],
@@ -119,7 +120,46 @@ class RentalController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $status = $request->input('status');
+
+            $rental = Rental::findOrFail($id);
+
+            $rental->update([
+                'status' => $status,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Status penyewaan berhasil diperbarui',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function confirmPayment(Request $request, string $id)
+    {
+        try {
+            $rental = Rental::findOrFail($id);
+
+            $rental->update([
+                'payment_status' => 'paid',
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Status pembayaran penyewaan berhasil diperbarui',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**

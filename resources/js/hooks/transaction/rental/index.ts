@@ -1,6 +1,6 @@
 import { makeRequest } from '@/lib/utils';
 import { useMutation } from '@tanstack/react-query';
-import { CreateRentalRequest } from './types';
+import { CreateRentalRequest, UpdateRentalRequest } from './types';
 
 const useRentalMutation = () => {
     const createRental = useMutation({
@@ -8,6 +8,23 @@ const useRentalMutation = () => {
             return await makeRequest<{ message: string }>(route('rentals.store'), {
                 method: 'POST',
                 data,
+            });
+        },
+    });
+
+    const updateRental = useMutation({
+        mutationFn: async ({ id, data }: { id: number; data: UpdateRentalRequest }) => {
+            return await makeRequest<{ message: string }>(route('rentals.update', id), {
+                method: 'PUT',
+                data,
+            });
+        },
+    });
+
+    const confirmPaymentRental = useMutation({
+        mutationFn: async (id: number) => {
+            return await makeRequest<{ message: string }>(route('rentals.confirm-payment', id), {
+                method: 'PUT',
             });
         },
     });
@@ -31,6 +48,8 @@ const useRentalMutation = () => {
 
     return {
         createRental,
+        updateRental,
+        confirmPaymentRental,
         deleteRental,
         deleteMultipleRental,
     };

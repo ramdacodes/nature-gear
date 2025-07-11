@@ -58,6 +58,7 @@ interface DataTableProps<TData, TValue = never> {
   isError?: boolean
   getRowKey: (row: Row<TData>) => Key
   density?: "base" | "large" | "xlarge"
+  renderExpandedRow?: (row: Row<TData>) => React.ReactNode | null
 }
 
 export function DataTable<TData, TValue = never>({
@@ -67,6 +68,7 @@ export function DataTable<TData, TValue = never>({
   isError = false,
   getRowKey,
   density = "base",
+   renderExpandedRow,
 }: DataTableProps<TData, TValue>) {
   const { pageSize } = table.getState().pagination
 
@@ -122,6 +124,7 @@ export function DataTable<TData, TValue = never>({
         ) : table.getRowModel().rows?.length ? (
           <>
             {table.getRowModel().rows.map((row) => (
+              <React.Fragment key={row.id}>
               <TableRow
                 key={getRowKey(row)}
                 className={cn(
@@ -135,6 +138,18 @@ export function DataTable<TData, TValue = never>({
                   </TableCell>
                 ))}
               </TableRow>
+              {row.getIsExpanded() && renderExpandedRow && (
+                  <TableRow className="h-32">
+                    <TableCell
+                      colSpan={columns.length}
+                      className="p-2 bg-muted/50">
+                      <div className="overflow-auto">
+                        {renderExpandedRow(row)}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </React.Fragment>
             ))}
             {table.getRowModel().rows.length < pageSize ? (
               <TableRow className="bg-muted/50">

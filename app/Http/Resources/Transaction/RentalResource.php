@@ -22,6 +22,27 @@ class RentalResource extends JsonResource
             'end_date' => $this->end_date,
             'total' => $this->total,
             'status' => $this->status,
+            'payment_status' => $this->payment_status,
+            'items' => $this->rentalDetail->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'product' => $item->product ? [
+                        'id' => $item->product->id,
+                        'name' => $item->product->name,
+                        'category' => $item->product->category ? [
+                            'id' => $item->product->category->id,
+                            'name' => $item->product->category->name,
+                        ] : null,
+                        'variant' => $item->product->variant ? [
+                            'id' => $item->product->variant->id,
+                            'name' => $item->product->variant->name,
+                        ] : null,
+                        'price_per_day' => $item->product->price_per_day,
+                    ] : null,
+                    'duration' => $item->duration,
+                    'total' => $item->sub_total,
+                ];
+            })->toArray(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];
