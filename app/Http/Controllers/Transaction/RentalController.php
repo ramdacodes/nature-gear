@@ -13,6 +13,9 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Xendit\Configuration;
+use Xendit\Invoice\CreateInvoiceRequest;
+use Xendit\Invoice\InvoiceApi;
 
 class RentalController extends Controller
 {
@@ -80,7 +83,7 @@ class RentalController extends Controller
             $startDate = Carbon::parse($data['start_date']);
             $endDate = Carbon::parse($data['end_date']);
 
-            $duration = max(1, $endDate->diffInDays($startDate));
+            $duration = $startDate->diffInDays($endDate) + 1;
 
 
             $rental = Rental::create([
@@ -138,6 +141,34 @@ class RentalController extends Controller
                 'success' => false,
                 'message' => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    public function payment(string $id)
+    {
+        $rental = Rental::findOrFail($id);
+
+        Configuration::setXenditKey(config('services.xendit.secret_key'));
+
+        $apiInstance = new InvoiceApi();
+        $create_invoice_request = new CreateInvoiceRequest([
+            'external_id' => $rental->code,
+            'description' => 'Transaksi Penyewaan Nature Gear #' . $rental->code,
+            'amount' => $rental->total,
+            'invoice_duration' => 172800,
+            'currency' => 'IDR',
+            'reminder_time' => 1
+        ]);
+
+        try {
+            $invoice = $apiInstance->createInvoice($create_invoice_request);
+
+            $url = $invoice['invoice_url'];
+
+            return redirect($url);
+        } catch (\Xendit\XenditSdkException $e) {
+            echo 'Exception when calling InvoiceApi->createInvoice: ', $e->getMessage(), PHP_EOL;
+            echo 'Full Error: ', json_encode($e->getFullError()), PHP_EOL;
         }
     }
 

@@ -265,13 +265,25 @@ export const columns = [
                                 </DropdownMenuItem>
                             ) : null}
                             {data.payment_status === 'unpaid' ? (
-                                <DropdownMenuItem
-                                    onSelect={() => {
-                                        setTimeout(() => setIsDialogConfirmationPaymentOpen(true), 0);
-                                    }}
-                                >
-                                    <span>Konfirmasi Pembayaran</span>
-                                </DropdownMenuItem>
+                                <>
+                                    <DropdownMenuItem
+                                        onSelect={() => {
+                                            setTimeout(() => {
+                                                window.open(route('rentals.payment', { id: data.id }), '_blank');
+                                            }, 0);
+                                        }}
+                                    >
+                                        <span>Lakukan Pembayaran</span>
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuItem
+                                        onSelect={() => {
+                                            setTimeout(() => setIsDialogConfirmationPaymentOpen(true), 0);
+                                        }}
+                                    >
+                                        <span>Konfirmasi Pembayaran</span>
+                                    </DropdownMenuItem>
+                                </>
                             ) : null}
                             <DropdownMenuItem
                                 onSelect={() => {

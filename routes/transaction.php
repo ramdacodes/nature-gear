@@ -9,6 +9,7 @@ Route::prefix('transactions')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
         Route::put('/{id}', 'update')->name('update');
+        Route::get('/{id}/payment', 'payment')->name('payment');
         Route::put('/{id}/confirm-payment', 'confirmPayment')->name('confirm-payment');
         Route::delete('/{id}', 'destroy')->name('destroy');
         Route::delete('/destroy/multiple', 'destroyMultiple')->name('destroy-multiple');

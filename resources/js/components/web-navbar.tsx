@@ -22,6 +22,10 @@ const routeList: RouteProps[] = [
         label: 'Beranda',
     },
     {
+        href: route('product.web'),
+        label: 'Produk Tersedia',
+    },
+    {
         href: route('rent'),
         label: 'Sewa',
     },
