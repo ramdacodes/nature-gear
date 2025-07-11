@@ -11,10 +11,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { DataTable, DataTablePagination, DataTableToolbar } from '@/components/ui/data-table';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { TRANSACTION_RENTAL_LIST } from '@/constants';
 import { useRentalMutation } from '@/hooks/transaction/rental';
 import useTableQuery from '@/hooks/use-table-query';
 import AppLayout from '@/layouts/app-layout';
+import { numberFormat } from '@/lib/utils';
 import { columnLabel, columns, CreateRentalForm } from '@/pages/transaction/rental/components';
 import { listRentals } from '@/services/transaction/rental';
 import { RentalResponse } from '@/services/transaction/rental/types';
@@ -24,6 +26,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import {
     ColumnFiltersState,
     getCoreRowModel,
+    getExpandedRowModel,
     getFacetedRowModel,
     getFacetedUniqueValues,
     getFilteredRowModel,
@@ -60,6 +63,7 @@ export default function Rental() {
     const [sheetOpen, setSheetOpen] = useState(false);
     const [dialogDeleteOpen, setDialogDeleteOpen] = useState(false);
     const [rowSelection, setRowSelection] = useState({});
+    const [expanded, setExpanded] = useState({});
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [globalFilter, setGlobalFilter] = useState('');
@@ -105,8 +109,11 @@ export default function Rental() {
             columnFilters,
             globalFilter,
             pagination,
+            expanded,
         },
         onRowSelectionChange: setRowSelection,
+        getExpandedRowModel: getExpandedRowModel(),
+        onExpandedChange: setExpanded,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         onGlobalFilterChange: setGlobalFilter,
@@ -269,6 +276,7 @@ export default function Rental() {
                             isLoading={tableQuery.status === 'pending' || (tableQuery.isFetching && tableQuery.isFetching)}
                             isError={tableQuery.status === 'error'}
                             getRowKey={(row) => row.original.id}
+                            renderExpandedRow={(row) => <TableExpanded data={row.original} />}
                         />
 
                         <DataTablePagination table={table} rowCount={tableQuery.data?.rowCount} />
@@ -276,5 +284,36 @@ export default function Rental() {
                 </div>
             </AppLayout>
         </RentalContext.Provider>
+    );
+}
+
+function TableExpanded({ data }: { data: RentalResponse }) {
+    return (
+        <div>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Produk</TableHead>
+                        <TableHead>Kategori</TableHead>
+                        <TableHead>Varian</TableHead>
+                        <TableHead>Harga/Hari</TableHead>
+                        <TableHead>Durasi (Hari)</TableHead>
+                        <TableHead>Total</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {data?.items?.map((item) => (
+                        <TableRow key={item.id} className="text-sm">
+                            <TableCell>{item.product?.name ?? '-'}</TableCell>
+                            <TableCell>{item.product?.category?.name ?? '-'}</TableCell>
+                            <TableCell>{item.product?.variant?.name ?? '-'}</TableCell>
+                            <TableCell>{item.product ? numberFormat(item.product.price_per_day) : '-'}</TableCell>
+                            <TableCell>{item.duration}</TableCell>
+                            <TableCell>{numberFormat(item.total)}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </div>
     );
 }

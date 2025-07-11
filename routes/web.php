@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Product\ProductWebController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('web/index');
 })->name('home');
+
+Route::get('/product', [ProductWebController::class, 'index'])->name('product.web');
 
 Route::get('/rent', function () {
     return Inertia::render('web/page/rent/index');

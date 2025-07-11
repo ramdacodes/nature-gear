@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { TRANSACTION_RENTAL_LIST } from '@/constants';
 import { useRentalMutation } from '@/hooks/transaction/rental';
@@ -12,7 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { usePage } from '@inertiajs/react';
 import axios from 'axios';
 import { format } from 'date-fns';
-import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react';
+import { Check, ChevronsUpDown } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -32,8 +32,8 @@ interface PageData extends SharedData {
 const formSchema = z.object({
     product_id: z.string().nonempty('Produk harus diisi'),
     customer_id: z.string().nonempty('Pelanggan harus diisi'),
-    start_date: z.date({ required_error: 'Tanggal mulai harus diisi' }),
-    end_date: z.date({ required_error: 'Tanggal selesai harus diisi' }),
+    start_date: z.string().nonempty('Tanggal mulai harus diisi'),
+    end_date: z.string().nonempty('Tanggal selesai harus diisi'),
 });
 
 export default function CreateRentalForm() {
@@ -42,10 +42,6 @@ export default function CreateRentalForm() {
     const [openSelect, setOpenSelect] = useState({
         product: false,
         customer: false,
-    });
-    const [openCalendar, setOpenCalendar] = useState({
-        start: false,
-        end: false,
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -59,8 +55,8 @@ export default function CreateRentalForm() {
         defaultValues: {
             product_id: '',
             customer_id: '',
-            start_date: new Date(),
-            end_date: new Date(),
+            start_date: String(new Date()),
+            end_date: String(new Date()),
         },
     });
 
@@ -273,45 +269,18 @@ export default function CreateRentalForm() {
                             control={form.control}
                             name="start_date"
                             render={({ field }) => (
-                                <FormItem className="flex flex-col">
+                                <FormItem>
                                     <FormLabel>Tanggal Mulai</FormLabel>
-                                    <Popover
-                                        open={openCalendar.start}
-                                        onOpenChange={() => {
-                                            setOpenCalendar((prev) => ({
-                                                ...prev,
-                                                start: !prev.start,
-                                            }));
-                                        }}
-                                    >
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button
-                                                    variant={'outline'}
-                                                    className={cn('pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
-                                                >
-                                                    {field.value ? format(field.value, 'dd MMMM yyyy') : <span>Pilih tanggal</span>}
-                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent avoidCollisions={false} className="w-auto p-0" align="start">
-                                            <Calendar
-                                                mode="single"
-                                                selected={field.value}
-                                                onSelect={(value) => {
-                                                    field.onChange(value);
-
-                                                    setOpenCalendar((prev) => ({
-                                                        ...prev,
-                                                        start: !prev.start,
-                                                    }));
-                                                }}
-                                                disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
-                                                initialFocus
-                                            />
-                                        </PopoverContent>
-                                    </Popover>
+                                    <FormControl>
+                                        <Input
+                                            type="date"
+                                            placeholder="Pilih tanggal mulai"
+                                            autoComplete="off"
+                                            {...field}
+                                            value={field.value ? String(field.value) : ''}
+                                            onChange={(e) => field.onChange(format(new Date(e.target.value), 'yyyy-MM-dd'))}
+                                        />
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -323,45 +292,18 @@ export default function CreateRentalForm() {
                             control={form.control}
                             name="end_date"
                             render={({ field }) => (
-                                <FormItem className="flex flex-col">
+                                <FormItem>
                                     <FormLabel>Tanggal Selesai</FormLabel>
-                                    <Popover
-                                        open={openCalendar.end}
-                                        onOpenChange={() => {
-                                            setOpenCalendar((prev) => ({
-                                                ...prev,
-                                                end: !prev.end,
-                                            }));
-                                        }}
-                                    >
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button
-                                                    variant={'outline'}
-                                                    className={cn('pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
-                                                >
-                                                    {field.value ? format(field.value, 'dd MMMM yyyy') : <span>Pilih tanggal</span>}
-                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent avoidCollisions={false} className="w-auto p-0" align="start">
-                                            <Calendar
-                                                mode="single"
-                                                selected={field.value}
-                                                onSelect={(value) => {
-                                                    field.onChange(value);
-
-                                                    setOpenCalendar((prev) => ({
-                                                        ...prev,
-                                                        end: !prev.end,
-                                                    }));
-                                                }}
-                                                disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
-                                                initialFocus
-                                            />
-                                        </PopoverContent>
-                                    </Popover>
+                                    <FormControl>
+                                        <Input
+                                            type="date"
+                                            placeholder="Pilih tanggal selesai"
+                                            autoComplete="off"
+                                            {...field}
+                                            value={field.value ? String(field.value) : ''}
+                                            onChange={(e) => field.onChange(format(new Date(e.target.value), 'yyyy-MM-dd'))}
+                                        />
+                                    </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}

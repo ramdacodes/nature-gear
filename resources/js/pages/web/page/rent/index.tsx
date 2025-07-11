@@ -28,12 +28,12 @@ export default function Rent() {
                     </div>
 
                     <div>
-                        <h2 className="text-lg font-semibold dark:text-white">Cara Menyewa</h2>
-                        <ol className="ml-4 list-inside list-decimal">
-                            <li>Pilih produk yang ingin disewa.</li>
+                        <h2 className="mb-2 text-lg font-semibold dark:text-white">Cara Menyewa</h2>
+                        <ol className="ml-5 list-decimal space-y-1">
+                            <li>Lihat daftar peralatan yang tersedia.</li>
                             <li>Tentukan tanggal mulai dan akhir penyewaan.</li>
-                            <li>Lengkapi data diri dan ajukan permintaan sewa.</li>
-                            <li>Tunggu konfirmasi dan instruksi pembayaran dari kami.</li>
+                            <li>Hubungi kami melalui WhatsApp atau email untuk melakukan pemesanan.</li>
+                            <li>Kami akan mengonfirmasi ketersediaan barang dan mengirimkan instruksi pembayaran.</li>
                         </ol>
                     </div>
 

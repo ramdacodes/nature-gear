@@ -13,6 +13,9 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Xendit\Configuration;
+use Xendit\Invoice\CreateInvoiceRequest;
+use Xendit\Invoice\InvoiceApi;
 
 class RentalController extends Controller
 {
@@ -28,7 +31,7 @@ class RentalController extends Controller
             $filters = $request->input('filters', []);
             $sorting = $request->input('sorting', []);
 
-            $query = Rental::query();
+            $query = Rental::with('rentalDetail.product');
 
             if (!empty($globalFilter)) {
                 $query->where(function ($q) use ($globalFilter) {
@@ -80,7 +83,8 @@ class RentalController extends Controller
             $startDate = Carbon::parse($data['start_date']);
             $endDate = Carbon::parse($data['end_date']);
 
-            $duration = $endDate->diffInDays($startDate);
+            $duration = $startDate->diffInDays($endDate) + 1;
+
 
             $rental = Rental::create([
                 'customer_id' => $data['customer_id'],
@@ -119,7 +123,74 @@ class RentalController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $status = $request->input('status');
+
+            $rental = Rental::findOrFail($id);
+
+            $rental->update([
+                'status' => $status,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Status penyewaan berhasil diperbarui',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function payment(string $id)
+    {
+        $rental = Rental::findOrFail($id);
+
+        Configuration::setXenditKey(config('services.xendit.secret_key'));
+
+        $apiInstance = new InvoiceApi();
+        $create_invoice_request = new CreateInvoiceRequest([
+            'external_id' => $rental->code,
+            'description' => 'Transaksi Penyewaan Nature Gear #' . $rental->code,
+            'amount' => $rental->total,
+            'invoice_duration' => 172800,
+            'currency' => 'IDR',
+            'reminder_time' => 1
+        ]);
+
+        try {
+            $invoice = $apiInstance->createInvoice($create_invoice_request);
+
+            $url = $invoice['invoice_url'];
+
+            return redirect($url);
+        } catch (\Xendit\XenditSdkException $e) {
+            echo 'Exception when calling InvoiceApi->createInvoice: ', $e->getMessage(), PHP_EOL;
+            echo 'Full Error: ', json_encode($e->getFullError()), PHP_EOL;
+        }
+    }
+
+    public function confirmPayment(Request $request, string $id)
+    {
+        try {
+            $rental = Rental::findOrFail($id);
+
+            $rental->update([
+                'payment_status' => 'paid',
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Status pembayaran penyewaan berhasil diperbarui',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
