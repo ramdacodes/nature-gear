@@ -138,7 +138,7 @@ class ProductController extends Controller
                     Storage::disk('public')->delete($path);
                 }
 
-                $image_1 = $request->file('image');
+                $image_1 = $request->file('image_1');
 
                 $image_1->storeAs('images/products', $image_1->hashName(), 'public');
 

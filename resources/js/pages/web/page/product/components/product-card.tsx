@@ -15,7 +15,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ name, category, variant, price_per_day, description, image_1 }: ProductCardProps) {
     return (
-        <Card className="overflow-hidden pt-0 transition-shadow hover:shadow-lg">
+        <Card className="flex flex-col overflow-hidden pt-0 transition-shadow hover:shadow-lg">
             <img
                 src={image_1 || '/images/placeholder.png'}
                 alt={name}
@@ -25,31 +25,33 @@ export default function ProductCard({ name, category, variant, price_per_day, de
                 }}
             />
 
-            <CardHeader>
-                <CardTitle className="text-lg font-semibold">{name}</CardTitle>
-                <div className="mt-1 flex flex-wrap gap-2">
-                    {category && <Badge variant="outline">{category}</Badge>}
-                    {variant && <Badge variant="secondary">{variant}</Badge>}
-                </div>
-            </CardHeader>
+            <div className="flex flex-grow flex-col px-4 pt-2 pb-4">
+                <CardHeader className="p-0">
+                    <CardTitle className="text-lg font-semibold">{name}</CardTitle>
+                    <div className="mt-1 flex flex-wrap gap-2">
+                        {category && <Badge variant="outline">{category}</Badge>}
+                        {variant && <Badge variant="secondary">{variant}</Badge>}
+                    </div>
+                </CardHeader>
 
-            <CardContent className="space-y-4">
-                <p className="text-muted-foreground line-clamp-3 text-sm">{description}</p>
+                <CardContent className="flex flex-grow flex-col justify-between space-y-4 p-0 pt-3">
+                    <p className="text-muted-foreground line-clamp-3 text-sm">{description}</p>
 
-                <div className="text-sm font-semibold text-green-700 dark:text-green-400">{numberFormat(price_per_day)} / hari</div>
+                    <div className="text-sm font-semibold text-green-700 dark:text-green-400">{numberFormat(price_per_day)} / hari</div>
 
-                <Button
-                    className="w-full cursor-pointer"
-                    size="sm"
-                    onClick={() => {
-                        const message = `Saya ingin sewa ${name} di Nature Gear.`;
-                        const url = `https://wa.me/6281234567890?text=${encodeURIComponent(message)}`;
-                        window.open(url, '_blank');
-                    }}
-                >
-                    Sewa Sekarang
-                </Button>
-            </CardContent>
+                    <Button
+                        className="mt-auto w-full cursor-pointer"
+                        size="sm"
+                        onClick={() => {
+                            const message = `Saya ingin sewa ${name} di Nature Gear.`;
+                            const url = `https://wa.me/6281234567890?text=${encodeURIComponent(message)}`;
+                            window.open(url, '_blank');
+                        }}
+                    >
+                        Sewa Sekarang
+                    </Button>
+                </CardContent>
+            </div>
         </Card>
     );
 }

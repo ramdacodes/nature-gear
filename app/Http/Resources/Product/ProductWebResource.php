@@ -22,7 +22,7 @@ class ProductWebResource extends JsonResource
             'variant' => $this->variant ? $this->variant->name : null,
             'price_per_day' => $this->price_per_day,
             'description' => $this->description,
-            'image_1' => $this->image_1 ? Storage::disk('public')->url($this->image_1) : null,
+            'image_1' => $this->image_1 ? asset('storage/images/products/' . $this->image_1) : null,
         ];
     }
 }

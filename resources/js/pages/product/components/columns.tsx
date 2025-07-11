@@ -138,6 +138,22 @@ export const columns = [
                 filterType="text"
             />
         ),
+        cell: ({ row }) => {
+            const data = row.original;
+            const [expanded, setExpanded] = useState(false);
+
+            const description = data.description || '-';
+
+            return (
+                <div
+                    className={`max-w-[400px] ${!expanded ? 'cursor-pointer truncate' : 'text-wrap'}`}
+                    onClick={() => setExpanded(!expanded)}
+                    title={!expanded ? description : ''}
+                >
+                    {description}
+                </div>
+            );
+        },
         enableColumnFilter: false,
     }),
     columnHelper.accessor('created_at', {
